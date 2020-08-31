@@ -14,6 +14,7 @@ class StudentController extends Controller
      */
     public function index()
     {
+      // print_r(Student::get());
         return response()->json(['status' => true, 'data' => Student::all()]);
     }
 
@@ -45,7 +46,7 @@ class StudentController extends Controller
         $store = Student::create($Student);
 
         if ($store) {
-            return response()->json(['status' => true, 'message' => 'Student successfully created.', 'data' => $store], 201);
+            return response()->json(['status' => true, 'message' => 'Student successfully stored.', 'data' => $store], 201);
         }
 
         return response()->json(['status' => false, 'message' => 'Failed to store Student. Please try again.'], 500);

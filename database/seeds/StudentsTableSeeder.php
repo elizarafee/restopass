@@ -13,15 +13,16 @@ class StudentsTableSeeder extends Seeder
      */
     public function run()
     {
-        $faker = Faker::create('App\models\Students');
+        $faker = \Faker\Factory::create();
+        
         for ($i=0; $i<100; $i++) {
             DB::table('students')-> insert([
             'name' =>  $faker->name(),
-            'age' =>  $faker->numberBetween(18, 110),
+            'age' =>  $faker->numberBetween(18, 99),
             'city' =>  $faker->city(),
-            'created_at' =>  \Carbon\Carbon::now(),
-            'updated_at' =>  \Carbon\Carbon::now(),
-            'deleted_at' =>  \Carbon\Carbon::now(),
+            // 'created_at' =>  \Carbon\Carbon::now(),
+            // 'updated_at' =>  \Carbon\Carbon::now(),
+            // 'deleted_at' =>  \Carbon\Carbon::now(),
         ]);
         }
     }
