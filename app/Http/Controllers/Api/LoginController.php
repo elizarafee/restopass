@@ -49,7 +49,12 @@ class LoginController extends Controller
         if( !Auth::attempt($store)){
             return response()->json(['status' => false, 'message' => 'Failed to login. Please try again.'], 500);
         }
+
+        $accessToken = Auth::user()->createToken('authToken')->accessToken;
+
         return response()->json(['status' => true, 'message' => 'Successfully logged in.', 'data' => $store], 201);
+
+
     }
 
     /**
