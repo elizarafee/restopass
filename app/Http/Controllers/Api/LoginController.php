@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreLoginRequest;
+use App\Login;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -33,9 +36,20 @@ class LoginController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreLoginRequest $request)
     {
-        
+        $login = [
+            'email' => $request->get('email'),
+            'password' => $request->get('password'),
+            'created_at' => date('Y-m-d H:i:s'),
+        ];
+
+        $store = Login::create($login);
+
+        if( !Auth::attempt($store)){
+            return response()->json(['status' => false, 'message' => 'Failed to login. Please try again.'], 500);
+        }
+        return response()->json(['status' => true, 'message' => 'Successfully logged in.', 'data' => $store], 201);
     }
 
     /**
