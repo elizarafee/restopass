@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -17,7 +17,7 @@ class LoginController extends Controller
      */
     public function index()
     {
-        //
+        return Login::all();
     }
 
     /**
@@ -46,16 +46,14 @@ class LoginController extends Controller
 
         $store = Login::create($login);
 
-        if (!Auth::attempt($store)) {
+        if (!$store) {
             return response()->json(['status' => false, 'message' => 'Failed to login. Please try again.'], 500);
         }
 
-        $user = Login::find(1);
-
         // Creating a token without scopes...
-        $token = $user->createToken('Token Name')->accessToken;
+        $token = $store->createToken('Token Name')->accessToken;
 
-        return response()->json(['status' => true, 'message' => 'Successfully logged in.', 'user' => Auth::user(), 'access_token' => $token], 201);
+        return response()->json(['status' => true, 'message' => 'Successfully logged in and generated an access token.', 'user' => $store, 'access_token' => $token], 201);
     }
 
     /**
@@ -66,7 +64,7 @@ class LoginController extends Controller
      */
     public function show($id)
     {
-        //
+        return response()->json(['status' => true, 'data' => Login::find($id)]);
     }
 
     /**
@@ -89,7 +87,17 @@ class LoginController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $data = array(
+            'email' => $request->get('email'),
+            'password' => $request->get('password'),
+            );
+        $update = Login::where('id', $id)->update($data);
+        
+        if ($update) {
+            return response()->json(['status' => true, 'message' => 'Loggin in details successfully updated.', 'data' => Login::find($id)], 200);
+        }
+        
+        return response()->json(['status' => false, 'message' => 'Failed to update loggin in details. Please try again.'], 500);
     }
 
     /**
@@ -100,6 +108,12 @@ class LoginController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $person = Login::find($id);
+        $delete = $person->delete();
+
+        if ($delete) {
+            return response()->json(['status' => true, 'message' => 'This profile is deleted.', 'data' => 'Datas are not available'], 200);
+        }
+        return response()->json(['status' => false, 'message' => 'Failed to delete profile. Please try again.'], 500);
     }
 }
