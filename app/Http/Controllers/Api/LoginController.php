@@ -53,8 +53,6 @@ class LoginController extends Controller
         $accessToken = Auth::user()->createToken('authToken')->accessToken;
 
         return response()->json(['status' => true, 'message' => 'Successfully logged in.', 'data' => $store], 201);
-
-
     }
 
     /**
