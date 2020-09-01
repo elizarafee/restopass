@@ -46,13 +46,16 @@ class LoginController extends Controller
 
         $store = Login::create($login);
 
-        if( !Auth::attempt($store)){
+        if (!Auth::attempt($store)) {
             return response()->json(['status' => false, 'message' => 'Failed to login. Please try again.'], 500);
         }
 
-        $accessToken = Auth::user()->createToken('authToken')->accessToken;
+        $user = Login::find(1);
 
-        return response()->json(['status' => true, 'message' => 'Successfully logged in.', 'data' => $store], 201);
+        // Creating a token without scopes...
+        $token = $user->createToken('Token Name')->accessToken;
+
+        return response()->json(['status' => true, 'message' => 'Successfully logged in.', 'user' => Auth::user(), 'access_token' => $token], 201);
     }
 
     /**
